@@ -1,38 +1,34 @@
-import React from "react";
+import React, { memo } from "react";
 import { Card, Grid } from 'antd-mobile'
 import styles from './index.less'
-const GoodsList: React.FC = (props) => {
-    const goGoodsDetail = (id: string) => {
-        console.log(123)
+import { history } from 'umi'
+type GoodsItemType = {
+    id: number,
+    title: string,
+    price: string,
+    type: string
+    src1: string,
+    src2: string
+}
+type IProps = {
+    list: GoodsItemType[]
+}
+const GoodsList: React.FC<IProps> = (props) => {
+    const goGoodsDetail = (id: number) => {
+        history.push(`/goodsdetail?id=${id}`,)
     }
     return <div className="item">
         <Grid columns={2} gap={5}>
-            <Grid.Item >
-            <div className={styles['grid-demo-item-block']} onClick={() => { goGoodsDetail('123') }}>
-                    <img className={styles.img} src={require('../../assets/img/4.png')} alt="" />
-                    <p className={styles.title}>顺口味 无尘豆腐猫砂6L 快速出臭结团</p>
-                    <p className={styles.price}>￥123</p>
-                </div>
-            </Grid.Item>
-            <Grid.Item>
-            <div className={styles['grid-demo-item-block']} onClick={() => { goGoodsDetail('123') }}>
-                    <img className={styles.img} src={require('../../assets/img/4.png')} alt="" />
-                    <p className={styles.title}>顺口味 无尘豆腐猫砂6L 快速出臭结团</p>
-                </div>
-            </Grid.Item>
-            <Grid.Item>
-                <div className={styles['grid-demo-item-block']} onClick={() => { goGoodsDetail('123') }}>
-                    <img className={styles.img} src={require('../../assets/img/4.png')} alt="" />
-                    <p className={styles.title}>顺口味 无尘豆腐猫砂6L 快速出臭结团</p>
-                </div>
-            </Grid.Item>
-            <Grid.Item>
-            <div className={styles['grid-demo-item-block']} onClick={() => { goGoodsDetail('123') }}>
-                    <img className={styles.img} src={require('../../assets/img/4.png')} alt="" />
-                    <p className={styles.title}>顺口味 无尘豆腐猫砂6L 快速出臭结团</p>
-                </div>
-            </Grid.Item>
+            {props.list.map((item, index) => {
+                return <Grid.Item key={index}>
+                    <div className={styles['grid-demo-item-block']} onClick={() => { goGoodsDetail(item.id) }}>
+                        <img className={styles.img} src={item.src1} alt="" />
+                        <p className={styles.title}>{item.title}</p>
+                        <p className={styles.price}>{item.price}</p>
+                    </div>
+                </Grid.Item>
+            })}
         </Grid>
     </div>
 }
-export default GoodsList
+export default memo(GoodsList) 
