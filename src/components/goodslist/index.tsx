@@ -15,7 +15,7 @@ type IProps = {
 };
 const GoodsList: React.FC<IProps> = (props) => {
   const goGoodsDetail = (id: number) => {
-    history.push(`/goodsdetail?id=${id}`);
+    history.push(`/shopping?id=${id}`);
   };
   return (
     <div className="item">

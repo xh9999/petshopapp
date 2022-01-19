@@ -1,6 +1,6 @@
 import React from 'react';
 import GoodsOrders from '@/components/goodsOrder';
 const GoodsOrder: React.FC = () => {
-  return <GoodsOrders>订单详情</GoodsOrders>;
+  return <GoodsOrders></GoodsOrders>;
 };
 export default GoodsOrder;

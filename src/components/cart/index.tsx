@@ -170,7 +170,7 @@ const Cartlist = () => {
           className={styles.addCart}
           color="warning"
           size="large"
-          onClick={() => history.push('/order')}
+          onClick={() => history.push('/goodsorder')}
         >
           前往收银台
         </Button>

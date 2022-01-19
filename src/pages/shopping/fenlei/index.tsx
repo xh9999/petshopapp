@@ -9,10 +9,7 @@ type IProps = {
 };
 
 const TuiJian: FC<IProps & RouteComponentProps<ParamsType>> = (props) => {
-  console.log(JSON.parse(props.fenlei));
   return JSON.parse(props.fenlei).map((item: string, index: number) => (
-    //    console.log(item,index)
-    // <div key={index}>{item}</div>
     <a className={styles.a} key={index}>
       {item}
     </a>

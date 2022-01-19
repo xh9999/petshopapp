@@ -4,6 +4,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { Link, history } from 'umi';
 import request from 'umi-request';
 import { RouteComponentProps } from 'react-router-dom';
+import { httpsGet, httpsPost } from '@/services';
 import { getRemoteList } from '../user';
 import TuiJian from './tuijian/index';
 import XuanZe from './xuanze/index';
@@ -31,6 +32,14 @@ interface RouterInfo {
   query: queryType;
 }
 const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
+  let [visible, setVisible] = useState(false);
+  // const getUser = async () => {
+  //   const data = await httpsGet('/api/user/getUser');
+  //   if (data.no) {
+  //     setVisible(true);
+  //     // const cart = await httpsGet('/api/cartList', { userNo: data.no })
+  //   }
+  // };
   const urlid = (props.location as any as RouterInfo).query.id;
   const [id, setid] = useState(urlid);
   const [xuanze, setxuanze] = useState([]);
@@ -104,8 +113,12 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
   });
 
   useEffect(() => {
+    // getUser()
     getRemoteList('/api/user/getUser').then((data) => {
-      setuserNo(data.no);
+      if (data.no) {
+        setVisible(true);
+        setuserNo(data.no);
+      }
     });
     getRemoteList(`/api/test/goods?id=${id}`).then((datas) => {
       let b = '';
@@ -126,14 +139,6 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
 
   return (
     <div style={ycxs}>
-      <div
-        className={styles.fanhui}
-        onClick={() => {
-          history.goBack();
-        }}
-      >
-        {'<'}
-      </div>
       {/* 图片 */}
       <div>
         <div>
@@ -180,19 +185,28 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
           <Button
             className={styles.goumai}
             onClick={() => {
-              let obj = {
-                goodsNo: data.id,
-                img: data.src1,
-                title: data.title,
-                taste: ys,
-                price: parseFloat(data.price.slice(1)),
-                count: num,
-                userNo: userNo,
-              };
-              request.post('/api/addcart', { data: obj }).then((data) => {
-                let a = { display: 'block' };
-                setyinchang(a);
-              });
+              if (visible) {
+                let obj = {
+                  goodsNo: data.id,
+                  img: data.src1,
+                  title: data.title,
+                  taste: ys,
+                  price: parseFloat(data.price.slice(1)),
+                  count: num,
+                  userNo: userNo,
+                };
+                request.post('/api/addcart', { data: obj }).then((data) => {
+                  let a = { display: 'block' };
+                  setyinchang(a);
+                });
+              } else {
+                Toast.show({
+                  content: '你还没有登录',
+                  afterClose: () => {
+                    history.push('/login');
+                  },
+                });
+              }
             }}
           >
             立即购买

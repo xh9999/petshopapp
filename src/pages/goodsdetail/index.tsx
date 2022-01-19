@@ -11,9 +11,7 @@ const GoodsDetail: React.FC<RouteComponentProps> = (props) => {
   useEffect(() => {
     httpsGet('/api/test/goods', {
       id: (props.location as any as RouterInfo).query.id,
-    }).then((datas) => {
-      console.log(datas);
-    });
+    }).then((datas) => {});
   }, []);
   return (
     <div>
