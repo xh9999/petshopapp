@@ -18,10 +18,12 @@ export default defineConfig({
         { path: '/goodsorder', component: '@/pages/goodsOrder/index' },
         { path: '/cart', component: '@/pages/cart/index' },
         { path: '/order', component: '@/pages/order/index' },
+        { path: '/myOrder', component: '@/pages/myOrder/index' },
       ],
     },
   ],
   fastRefresh: {},
+
   proxy: {
     '/api': {
       target: 'http://110.42.190.78:8888',
