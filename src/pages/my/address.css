@@ -1,0 +1,14 @@
+.form {
+  width: 90%;
+  margin-top: 2%;
+  margin-left: 5%;
+}
+.form .space {
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 2%;
+  font-size: 15%;
+}
+.form .space .btn {
+  font-size: 15%;
+}
