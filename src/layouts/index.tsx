@@ -28,7 +28,7 @@ const BasicLayout: React.FC<RouteComponentProps> = (props) => {
       icon: <AppstoreOutline />,
     },
     {
-      key: '/shopcar',
+      key: '/cart',
       title: '购物车',
       icon: <Icons />,
     },

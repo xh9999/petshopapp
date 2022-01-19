@@ -10,7 +10,7 @@ export default defineConfig({
       routes: [
         { path: '/', component: '@/pages/index' },
         { path: '/user', component: '@/pages/user/index' },
-        { path: '/shopcar', component: '@/pages/shopcar/index' },
+        // { path: '/shopcar', component: '@/pages/shopcar/index' },
         { path: '/orderdetail', component: '@/pages/orderDetail/index' },
         { path: '/goodsdetail', component: '@/pages/GoodsDetail/index' },
         { path: '/login', component: '@/pages/Login/index' },
