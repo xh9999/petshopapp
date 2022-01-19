@@ -6,6 +6,16 @@ export default defineConfig({
   },
   routes: [
     { path: '/', component: '@/pages/index' },
+    { path: '/shopping', component: '@/pages/shopping/shopping.tsx' },
   ],
-  fastRefresh: {}
+  fastRefresh: {},
+  proxy: {
+    '/api': {
+      target: 'http://110.42.190.78:8888/',
+      changeOrigin: true,
+      // 'pathRewrite': { '^/api': '' },
+    },
+  },
+  // mock:{}
+  mfsu: {},
 });
