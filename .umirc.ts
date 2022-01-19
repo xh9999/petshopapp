@@ -14,16 +14,18 @@ export default defineConfig({
         { path: '/orderdetail', component: '@/pages/orderDetail/index' },
         { path: '/goodsdetail', component: '@/pages/GoodsDetail/index' },
         { path: '/login', component: '@/pages/Login/index' },
-        { path: '/register', component: '@/pages/register/index' }
-      ]
+        { path: '/register', component: '@/pages/register/index' },
+        { path: '/goodsorder', component: '@/pages/goodsOrder/index' },
+      ],
     },
   ],
   fastRefresh: {},
   proxy: {
     '/api': {
-      'target': 'http://110.42.190.78:8888',
-      'changeOrigin': true,
+      target: 'http://110.42.190.78:8888',
+      changeOrigin: true,
       // 'pathRewrite': { '^/api': '' },
     },
   },
+  antd: {},
 });
