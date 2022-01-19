@@ -12,7 +12,7 @@ export default defineConfig({
         { path: '/user', component: '@/pages/user/index' },
         // { path: '/shopcar', component: '@/pages/shopcar/index' },
         { path: '/orderdetail', component: '@/pages/orderDetail/index' },
-        { path: '/goodsdetail', component: '@/pages/GoodsDetail/index' },
+        { path: '/shopping', component: '@/pages/shopping/shopping.tsx' },
         { path: '/login', component: '@/pages/Login/index' },
         { path: '/register', component: '@/pages/register/index' },
         { path: '/goodsorder', component: '@/pages/goodsOrder/index' },
@@ -29,4 +29,5 @@ export default defineConfig({
     },
   },
   antd: {},
+  mfsu: {},
 });
