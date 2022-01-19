@@ -15,26 +15,12 @@ import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { history } from 'umi';
 import { httpsGet, httpsPost } from '@/services';
-type RadioValue = string | number;
+// type RadioValue = string ;
 const GoodsOrders: React.FC = (props) => {
   const zfbSrc =
     'http://5c99816b4d469.t73.qifeiye.com/qfy-content/plugins/alipay-for-bitcommerce/images/alipay.png';
   const wxSrc =
     'http://5c99816b4d469.t73.qifeiye.com/qfy-content/plugins/wc-wechatpay/images/qfy_weixinpay_for_wc.png';
-  const users = [
-    {
-      id: 10,
-      title: '维克 营养膏克补软膏发育宠狗用猫用',
-      price: '￥95.00',
-      src1: 'https://ccdn.goodq.top/caches/b743838f302c63c3a9df703d21b43e81/aHR0cDovLzVjOTk4MTZiNGQ0NjkudDczLnFpZmVpeWUuY29tL3FmeS1jb250ZW50L3VwbG9hZHMvMjAxOS8wMy84YzQ2MDkwNGUwYWM1OWViYjczYjJjZWZhYzMwMzRiZi05MC53ZWJw.webp',
-    },
-    {
-      id: 14,
-      title: '维斯康 VITSCAN宠物保健品海棠颗粒',
-      price: '￥98.00',
-      src1: 'https://ccdn.goodq.top/caches/b743838f302c63c3a9df703d21b43e81/aHR0cDovLzVjOTk4MTZiNGQ0NjkudDczLnFpZmVpeWUuY29tL3FmeS1jb250ZW50L3VwbG9hZHMvMjAxOS8wMy8yZjg3NDUxYTY2ZWVkMmFmODVhNGZjYmZhZjhlYWNlZi05MC53ZWJw.webp',
-    },
-  ];
   const [phoneValue, setPhoneValue] = useState('');
   const [nickValue, setnickValue] = useState('');
   const [visible, setVisible] = useState(false);
@@ -43,7 +29,8 @@ const GoodsOrders: React.FC = (props) => {
   // 详细地址
   const [addressValue, setAddressValue] = useState('');
   const [detailValue, setDetailValue] = useState('');
-  const [value1, setValue1] = useState<RadioValue>();
+  const [value1, setValue1] = useState<any>('bank');
+  const [userInfo, setUserInfo] = useState<any>();
   type GoodsType = {
     count: number;
     goodsNo: string;
@@ -57,8 +44,9 @@ const GoodsOrders: React.FC = (props) => {
   const getUser = async () => {
     let sum = 0;
     const data = await httpsGet('/api/user/getUser');
+    setUserInfo(data);
+    console.log(data, '88888');
     const cart = await httpsGet('/api/cartList', { userNo: data.no });
-    console.log(cart);
     cart.forEach((item: any) => {
       sum += item.price * item.count;
     });
@@ -80,14 +68,31 @@ const GoodsOrders: React.FC = (props) => {
   const getAddress = (address: string) => {
     setAddressValue(address);
   };
+  const butInfo = (type: string) => {
+    if (type === 'bank') {
+      return '下单';
+    } else if (type == 'zfb') {
+      return '到支付宝付款';
+    } else {
+      return '使用微信扫码支付';
+    }
+  };
   // 下单
-  const orderGoods = () => {
+  const orderGoods = async () => {
     let obj = {
       name: nickValue,
       phone: phoneValue,
-      address: [...value, addressValue],
-      detail: detailValue,
+      address: [...value, addressValue].join(''),
+      goods: cartList,
+      userNo: userInfo.no,
+      orderNo: Math.random().toString().slice(2, 8),
     };
+    const data = await httpsPost('/api/order', obj);
+    console.log(data);
+    if (data.code == 0) {
+      const data1 = await httpsGet(`/api/deletecart?id=${userInfo.no}`);
+      history.push('/myOrder');
+    }
   };
   return (
     <div className={styles.container}>
@@ -98,7 +103,7 @@ const GoodsOrders: React.FC = (props) => {
         footer={
           <>
             <Button block color="primary" size="large" type="submit">
-              下单
+              {butInfo(value1)}
             </Button>
           </>
         }
@@ -244,7 +249,7 @@ const GoodsOrders: React.FC = (props) => {
             </List>
             <Radio.Group
               value={value1}
-              onChange={(val: RadioValue) => {
+              onChange={(val) => {
                 setValue1(val);
               }}
             >

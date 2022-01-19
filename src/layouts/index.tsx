@@ -3,7 +3,7 @@ import { history } from 'umi';
 import { Button, Space, Badge, TabBar, NavBar } from 'antd-mobile';
 import { RouteComponentProps } from 'react-router-dom';
 import { httpsGet, httpsPost } from '@/services';
-import Icons from '../components/icon/index';
+import { Icons } from '../components/icon/index';
 type UserInfoType = {
   address: object;
   nickname: string;
@@ -33,7 +33,7 @@ const BasicLayout: React.FC<RouteComponentProps> = (props) => {
       icon: <Icons />,
     },
     {
-      key: '/orderdetail',
+      key: '/myOrder',
       title: '订单详情',
       icon: <CollectMoneyOutline />,
     },
@@ -53,8 +53,8 @@ const BasicLayout: React.FC<RouteComponentProps> = (props) => {
   });
   useEffect(() => {
     httpsGet('/api/user/getUser').then((data) => {
-      console.log(data, '用户信息');
       setUserInfo(data);
+      console.log(data);
     });
     return () => {
       setUserInfo = () => {};
@@ -80,16 +80,16 @@ const BasicLayout: React.FC<RouteComponentProps> = (props) => {
       case '/':
         return <div>首页</div>;
         break;
-      case '/shopcar':
+      case '/cart':
         return <div>购物车</div>;
         break;
-      case '/orderdetail':
+      case '/myOrder':
         return <div>订单详情</div>;
         break;
       case '/user':
         return <div>个人中心</div>;
         break;
-      case '/goodsdetail':
+      case '/shopping':
         return <div>商品详情</div>;
         break;
       case '/login':
@@ -99,7 +99,7 @@ const BasicLayout: React.FC<RouteComponentProps> = (props) => {
         return <div>注册</div>;
     }
   };
-  const array = ['/', '/shopcar', '/orderdetail', '/user'];
+  const array = ['/', '/cart', '/myOrder', '/user'];
   return (
     <div>
       <NavBar

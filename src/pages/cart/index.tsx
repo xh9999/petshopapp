@@ -11,7 +11,6 @@ function Cart() {
     const data = await httpsGet('/api/user/getUser');
     if (data.no) {
       setVisible(true);
-      // const cart = await httpsGet('/api/cartList', { userNo: data.no })
     }
   };
   // 去登录

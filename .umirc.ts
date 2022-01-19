@@ -11,7 +11,6 @@ export default defineConfig({
         { path: '/', component: '@/pages/index' },
         { path: '/user', component: '@/pages/user/index' },
         // { path: '/shopcar', component: '@/pages/shopcar/index' },
-        { path: '/orderdetail', component: '@/pages/orderDetail/index' },
         { path: '/shopping', component: '@/pages/shopping/shopping.tsx' },
         { path: '/login', component: '@/pages/Login/index' },
         { path: '/register', component: '@/pages/register/index' },
@@ -23,7 +22,6 @@ export default defineConfig({
     },
   ],
   fastRefresh: {},
-
   proxy: {
     '/api': {
       target: 'http://110.42.190.78:8888',
@@ -31,5 +29,5 @@ export default defineConfig({
     },
   },
   antd: {},
-  mfsu: {},
+  dva: {},
 });
