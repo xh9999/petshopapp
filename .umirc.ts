@@ -16,6 +16,8 @@ export default defineConfig({
         { path: '/login', component: '@/pages/Login/index' },
         { path: '/register', component: '@/pages/register/index' },
         { path: '/goodsorder', component: '@/pages/goodsOrder/index' },
+        { path: '/cart', component: '@/pages/cart/index' },
+        { path: '/order', component: '@/pages/order/index' },
       ],
     },
   ],
@@ -24,7 +26,6 @@ export default defineConfig({
     '/api': {
       target: 'http://110.42.190.78:8888',
       changeOrigin: true,
-      // 'pathRewrite': { '^/api': '' },
     },
   },
   antd: {},
