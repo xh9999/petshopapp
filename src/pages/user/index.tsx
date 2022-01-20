@@ -20,6 +20,7 @@ import {
   UnorderedListOutline,
   UserOutline,
   SetOutline,
+  EnvironmentOutline,
 } from 'antd-mobile-icons';
 const User: React.FC<IPropsType> = ({ users }) => {
   const layout = async () => {
@@ -62,8 +63,17 @@ const User: React.FC<IPropsType> = ({ users }) => {
         <List.Item prefix={<Card />} onClick={() => {}}>
           优惠券
         </List.Item>
-        <List.Item prefix={<UserOutline />} onClick={() => {}}>
+        <List.Item
+          prefix={<UserOutline />}
+          onClick={() => history.push('/address')}
+        >
           个人资料
+        </List.Item>
+        <List.Item
+          prefix={<EnvironmentOutline />}
+          onClick={() => history.push('/address')}
+        >
+          账单地址
         </List.Item>
         {users.userInfo.no ? (
           <List.Item prefix={<SetOutline />} onClick={layout}>

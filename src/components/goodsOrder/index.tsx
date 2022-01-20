@@ -18,9 +18,7 @@ import { httpsGet, httpsPost } from '@/services';
 interface IPropsType extends ConnectProps {
   users: {
     userInfo: UserItem;
-    address: Array<string>;
   };
-  addr: [];
 }
 interface UserItem {
   phone: number | string;
@@ -35,7 +33,7 @@ type objType = {
   eamil: string;
   phone: string;
 };
-const GoodsOrders: React.FC<IPropsType> = ({ users, addr }) => {
+const GoodsOrders: React.FC<IPropsType> = ({ users }) => {
   const zfbSrc =
     'http://5c99816b4d469.t73.qifeiye.com/qfy-content/plugins/alipay-for-bitcommerce/images/alipay.png';
   const wxSrc =
@@ -359,7 +357,6 @@ const GoodsOrders: React.FC<IPropsType> = ({ users, addr }) => {
 const mapStateToProps = ({ users }: { users: any }) => {
   return {
     users,
-    addr: users.address,
   };
 };
 export default connect(mapStateToProps)(GoodsOrders);

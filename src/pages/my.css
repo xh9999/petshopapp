@@ -1,0 +1,43 @@
+.my_details {
+  width: 50%;
+  margin-left: 25%;
+  margin-top: 15%;
+  display: flex;
+  flex-direction: row;
+}
+.my_details .avatar {
+  flex: 5;
+}
+.my_details .right {
+  flex: 4;
+}
+.my_details .right .name,
+.my_details .right .welcome {
+  display: block;
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 10%;
+  text-align: center;
+}
+.my_details .right .name {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.my_details .right .welcome {
+  color: #999999;
+  font-size: 0.8rem;
+}
+.my_details .right .tag {
+  margin-top: 20%;
+  width: 80%;
+  margin-left: 10%;
+  text-align: center;
+}
+.list {
+  margin-top: 10%;
+}
+.exit {
+  width: 30%;
+  margin-top: 20%;
+  margin-left: 35%;
+}

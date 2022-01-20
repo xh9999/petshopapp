@@ -1,0 +1,13 @@
+.portrait {
+  width: 30%;
+  margin-left: 35%;
+  margin-top: 15%;
+}
+.portrait .avatar {
+  border-radius: 50%;
+}
+.form {
+  width: 80%;
+  margin-top: 5%;
+  margin-left: 10%;
+}
