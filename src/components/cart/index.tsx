@@ -4,9 +4,20 @@ import { CloseCircleOutline, TextDeletionOutline } from 'antd-mobile-icons';
 import { getCartList, getUserInfo } from '@/pages/cart/services/idnex';
 import styles from './style.module.css';
 import { httpsGet, httpsPost } from '@/services';
-import { history } from 'umi';
-
-const Cartlist = () => {
+import { history, connect, ConnectProps } from 'umi';
+interface IPropsType extends ConnectProps {
+  users: {
+    userInfo: UserItem;
+  };
+}
+interface UserItem {
+  phone: number | string;
+  nickname: string;
+  no?: string;
+  photo: string;
+  address: string | object;
+}
+const Cartlist: React.FC<IPropsType> = ({ users }) => {
   type GoodsType = {
     count: number;
     goodsNo: string;
@@ -18,21 +29,18 @@ const Cartlist = () => {
   let [cartList, setCartList] = useState<GoodsType[]>();
   let [totalPrice, setTotalPrice] = useState(0);
   useEffect(() => {
-    getUser();
+    if (users.userInfo.nickname) {
+      getUser();
+    }
     return () => {
       setCartList = () => {};
       setTotalPrice = () => {};
     };
   }, []);
-  // const [totalPrice, setTotalPrice] = useState()
+  // 购物车数量
   const getUser = async () => {
     let sum = 0;
-    const data = await httpsGet('/api/user/getUser');
-    console.log(data);
-    if (!data.no) {
-      return;
-    }
-    const cart = await httpsGet('/api/cartList', { userNo: data.no });
+    const cart = await httpsGet('/api/cartList', { userNo: users.userInfo.no });
     cart.forEach((item: any) => {
       sum += item.price * item.count;
     });
@@ -40,7 +48,6 @@ const Cartlist = () => {
     setCartList(cart);
   };
   const numChange = async (values: number, item: any) => {
-    console.log(values);
     setNum(values);
     const data = await httpsGet('/api/updata', {
       id: item.goodsNo,
@@ -201,5 +208,9 @@ const Cartlist = () => {
   const [value, setValue] = useState('');
   return <div>{empty()}</div>;
 };
-
-export default Cartlist;
+const mapStateToProps = ({ users }: { users: any }) => {
+  return {
+    users,
+  };
+};
+export default connect(mapStateToProps)(Cartlist);

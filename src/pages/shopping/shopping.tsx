@@ -1,7 +1,7 @@
 import styles from './shopping.less';
 import { Button, Stepper, Toast } from 'antd-mobile';
 import React, { FC, useState, useEffect } from 'react';
-import { Link, history } from 'umi';
+import { history, connect, ConnectProps } from 'umi';
 import request from 'umi-request';
 import { RouteComponentProps } from 'react-router-dom';
 import { httpsGet, httpsPost } from '@/services';
@@ -9,6 +9,18 @@ import { getRemoteList } from '../user';
 import TuiJian from './tuijian/index';
 import XuanZe from './xuanze/index';
 import FenLei from './fenlei/index';
+interface IPropsType extends ConnectProps {
+  users: {
+    userInfo: UserItem;
+  };
+}
+interface UserItem {
+  phone: number | string;
+  nickname: string;
+  no?: string;
+  photo: string;
+  address: string | object;
+}
 type ParamsType = {
   id: string;
 };
@@ -31,15 +43,8 @@ type queryType = {
 interface RouterInfo {
   query: queryType;
 }
-const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
+const ShopPing: FC<RouteComponentProps<ParamsType> & IPropsType> = (props) => {
   let [visible, setVisible] = useState(false);
-  // const getUser = async () => {
-  //   const data = await httpsGet('/api/user/getUser');
-  //   if (data.no) {
-  //     setVisible(true);
-  //     // const cart = await httpsGet('/api/cartList', { userNo: data.no })
-  //   }
-  // };
   const urlid = (props.location as any as RouterInfo).query.id;
   const [id, setid] = useState(urlid);
   const [xuanze, setxuanze] = useState([]);
@@ -49,7 +54,7 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
   const [ycxs, setycxs] = useState({ opacity: 0 });
   const [tp, settp] = useState('');
   const [ys, setys] = useState('');
-  const [userNo, setuserNo] = useState('');
+  // const [userNo, setuserNo] = useState('');
   function getys(item: string) {
     setys(item);
   }
@@ -111,15 +116,14 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
       },
     ],
   });
-
   useEffect(() => {
     // getUser()
-    getRemoteList('/api/user/getUser').then((data) => {
-      if (data.no) {
-        setVisible(true);
-        setuserNo(data.no);
-      }
-    });
+    // getRemoteList('/api/user/getUser').then((data) => {
+    //   if (data.no) {
+    //     setVisible(true);
+    //     setuserNo(data.no);
+    //   }
+    // });
     getRemoteList(`/api/test/goods?id=${id}`).then((datas) => {
       let b = '';
       if (datas.taste[0]) {
@@ -185,7 +189,7 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
           <Button
             className={styles.goumai}
             onClick={() => {
-              if (visible) {
+              if (props.users.userInfo.no) {
                 let obj = {
                   goodsNo: data.id,
                   img: data.src1,
@@ -193,7 +197,7 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
                   taste: ys,
                   price: parseFloat(data.price.slice(1)),
                   count: num,
-                  userNo: userNo,
+                  userNo: props.users.userInfo.no,
                 };
                 request.post('/api/addcart', { data: obj }).then((data) => {
                   let a = { display: 'block' };
@@ -264,4 +268,9 @@ const ShopPing: FC<RouteComponentProps<ParamsType>> = (props) => {
     </div>
   );
 };
-export default ShopPing;
+const mapStateToProps = ({ users }: { users: any }) => {
+  return {
+    users,
+  };
+};
+export default connect(mapStateToProps)(ShopPing);

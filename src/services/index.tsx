@@ -13,3 +13,7 @@ export const httpsPost = async (url: string, params?: {}) => {
   });
   return data;
 };
+export const GetUserInfo = async () => {
+  const data = await request('/api/user/getUser');
+  return data;
+};

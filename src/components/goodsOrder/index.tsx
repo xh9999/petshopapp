@@ -25,12 +25,12 @@ const GoodsOrders: React.FC = (props) => {
   const [nickValue, setnickValue] = useState('');
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState<string[]>([]);
-  const [cityValue, setCityValue] = useState([]);
+  let [cityValue, setCityValue] = useState([]);
   // 详细地址
   const [addressValue, setAddressValue] = useState('');
   const [detailValue, setDetailValue] = useState('');
   const [value1, setValue1] = useState<any>('bank');
-  const [userInfo, setUserInfo] = useState<any>();
+  let [userInfo, setUserInfo] = useState<any>();
   type GoodsType = {
     count: number;
     goodsNo: string;
@@ -45,7 +45,6 @@ const GoodsOrders: React.FC = (props) => {
     let sum = 0;
     const data = await httpsGet('/api/user/getUser');
     setUserInfo(data);
-    console.log(data, '88888');
     const cart = await httpsGet('/api/cartList', { userNo: data.no });
     cart.forEach((item: any) => {
       sum += item.price * item.count;
@@ -58,6 +57,11 @@ const GoodsOrders: React.FC = (props) => {
       setCityValue(data);
     });
     getUser();
+    return () => {
+      setCityValue = () => {};
+      setTotalPrice = () => {};
+      setUserInfo = () => {};
+    };
   }, []);
   const getPhone = (phone: string) => {
     setPhoneValue(phone);

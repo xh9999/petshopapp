@@ -22,6 +22,10 @@ export default defineConfig({
     },
   ],
   fastRefresh: {},
+  dva: {
+    immer: true,
+    hmr: false,
+  },
   proxy: {
     '/api': {
       target: 'http://110.42.190.78:8888',
@@ -29,5 +33,4 @@ export default defineConfig({
     },
   },
   antd: {},
-  dva: {},
 });

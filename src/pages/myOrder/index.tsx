@@ -3,8 +3,20 @@ import moment from 'moment';
 import React, { useState, useEffect, FC } from 'react';
 import { Tabs, Button, Dialog, Empty, Space } from 'antd-mobile';
 import { UnorderedListOutline, TextDeletionOutline } from 'antd-mobile-icons';
-import { request, history } from 'umi';
+import { request, history, connect, ConnectProps } from 'umi';
 import MyAllOrder from '../../components/myorder';
+interface IPropsType extends ConnectProps {
+  users: {
+    userInfo: UserItem;
+  };
+}
+interface UserItem {
+  phone: number | string;
+  nickname: string;
+  no?: string;
+  photo: string;
+  address: string | object;
+}
 type good = Array<goodsItemType>;
 type goodsItemType = {
   address: string;
@@ -24,25 +36,25 @@ type goodsType = {
   title: string;
   userNo: string;
 };
-const IndexPage: FC = () => {
-  const [goods, setgoods] = useState<good>();
-  const [time, settime] = useState<string>();
-  const [userStatus, setUserStatus] = useState<boolean>(false);
+const IndexPage: FC<IPropsType> = (props) => {
+  let [goods, setgoods] = useState<good>();
+  let [time, settime] = useState<string>();
+  let [userStatus, setUserStatus] = useState<boolean>(false);
   useEffect(() => {
-    // getRemoteList();
     getOrderList().then((data) => {
       if (data != 0) {
         setUserStatus(true);
         setgoods(data.reverse());
-        var c = moment(data.date).format('YYYY-MM-DD');
-        settime(c);
       }
     });
+    return () => {
+      setUserStatus = () => {};
+      setgoods = () => {};
+    };
   }, []);
   const getOrderList = async () => {
-    let user = await request('/api/user/getUser');
-    if (user.no) {
-      let data = await request(`/api/orderall?id=${user.no}`);
+    if (props.users.userInfo.no) {
+      let data = await request(`/api/orderall?id=${props.users.userInfo.no}`);
       return data.order;
     }
     return 0;
@@ -60,11 +72,10 @@ const IndexPage: FC = () => {
     } else {
       return (
         <div>
-          {' '}
           <Empty
             style={{ padding: '64px 0' }}
             imageStyle={{ width: 128 }}
-            description="您的购物车目前是空的"
+            description="还没有登录"
           />
           <Button
             size="middle"
@@ -84,5 +95,9 @@ const IndexPage: FC = () => {
   };
   return <div>{status()}</div>;
 };
-
-export default IndexPage;
+const mapStateToProps = ({ users }: { users: any }) => {
+  return {
+    users,
+  };
+};
+export default connect(mapStateToProps)(IndexPage);
