@@ -13,24 +13,45 @@ import {
 } from 'antd-mobile';
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
-import { history } from 'umi';
+import { history, connect, ConnectProps } from 'umi';
 import { httpsGet, httpsPost } from '@/services';
-// type RadioValue = string ;
-const GoodsOrders: React.FC = (props) => {
+interface IPropsType extends ConnectProps {
+  users: {
+    userInfo: UserItem;
+    address: Array<string>;
+  };
+  addr: [];
+}
+interface UserItem {
+  phone: number | string;
+  nickname: string;
+  no?: string;
+  photo: string;
+  address: objType;
+}
+type objType = {
+  address: [];
+  name: string;
+  eamil: string;
+  phone: string;
+};
+const GoodsOrders: React.FC<IPropsType> = ({ users, addr }) => {
   const zfbSrc =
     'http://5c99816b4d469.t73.qifeiye.com/qfy-content/plugins/alipay-for-bitcommerce/images/alipay.png';
   const wxSrc =
     'http://5c99816b4d469.t73.qifeiye.com/qfy-content/plugins/wc-wechatpay/images/qfy_weixinpay_for_wc.png';
-  const [phoneValue, setPhoneValue] = useState('');
-  const [nickValue, setnickValue] = useState('');
-  const [visible, setVisible] = useState(false);
-  const [value, setValue] = useState<string[]>([]);
+  // let [address, setAddress] = useState('')
+  let [phoneValue, setPhoneValue] = useState<any>();
+  let [nickValue, setnickValue] = useState('');
+  let [visible, setVisible] = useState(false);
+  let [value, setValue] = useState<any>();
   let [cityValue, setCityValue] = useState([]);
   // 详细地址
-  const [addressValue, setAddressValue] = useState('');
-  const [detailValue, setDetailValue] = useState('');
-  const [value1, setValue1] = useState<any>('bank');
+  let [addressValue, setAddressValue] = useState('');
+  let [detailValue, setDetailValue] = useState('');
+  let [value1, setValue1] = useState<any>('bank');
   let [userInfo, setUserInfo] = useState<any>();
+  // let [goodsAddress,setgoodsAddress]=useState<any>()
   type GoodsType = {
     count: number;
     goodsNo: string;
@@ -44,7 +65,14 @@ const GoodsOrders: React.FC = (props) => {
   const getUser = async () => {
     let sum = 0;
     const data = await httpsGet('/api/user/getUser');
+    // setgoodsAddress(data.address.address[3])
     setUserInfo(data);
+    if (data.address) {
+      setValue(data.address.address);
+      setAddressValue(data.address.address[3]);
+    }
+    setPhoneValue(data.phone);
+    setnickValue(data.nickname);
     const cart = await httpsGet('/api/cartList', { userNo: data.no });
     cart.forEach((item: any) => {
       sum += item.price * item.count;
@@ -52,18 +80,22 @@ const GoodsOrders: React.FC = (props) => {
     setTotalPrice(sum);
     setCartList(cart);
   };
+  const setUserInfos = () => {
+    setPhoneValue(users.userInfo.phone);
+  };
   useEffect(() => {
     httpsGet('/api/city').then((data) => {
       setCityValue(data);
     });
     getUser();
+    setUserInfos();
     return () => {
       setCityValue = () => {};
       setTotalPrice = () => {};
       setUserInfo = () => {};
     };
   }, []);
-  const getPhone = (phone: string) => {
+  const getPhone = (phone: any) => {
     setPhoneValue(phone);
   };
   const getNickname = (nickname: string) => {
@@ -83,19 +115,25 @@ const GoodsOrders: React.FC = (props) => {
   };
   // 下单
   const orderGoods = async () => {
-    let obj = {
-      name: nickValue,
-      phone: phoneValue,
-      address: [...value, addressValue].join(''),
-      goods: cartList,
-      userNo: userInfo.no,
-      orderNo: Math.random().toString().slice(2, 8),
-    };
-    const data = await httpsPost('/api/order', obj);
-    console.log(data);
-    if (data.code == 0) {
-      const data1 = await httpsGet(`/api/deletecart?id=${userInfo.no}`);
-      history.push('/myOrder');
+    // console.log()
+    if (!nickValue || !phoneValue || !value || !addressValue) {
+      Toast.show({
+        content: '请将账单地址填写完整',
+      });
+    } else {
+      let obj = {
+        name: nickValue,
+        phone: phoneValue,
+        address: [...value, addressValue].join(''),
+        goods: cartList,
+        userNo: userInfo.no,
+        orderNo: Math.random().toString().slice(2, 8),
+      };
+      const data = await httpsPost('/api/order', obj);
+      if (data.code == 0) {
+        const data1 = await httpsGet(`/api/deletecart?id=${userInfo.no}`);
+        history.push('/myOrder');
+      }
     }
   };
   return (
@@ -112,16 +150,12 @@ const GoodsOrders: React.FC = (props) => {
           </>
         }
       >
-        <Form.Item
-          className={styles.item}
-          name="nickname"
-          label="姓名"
-          rules={[{ required: true, message: '姓名不能为空' }]}
-        >
+        <Form.Item className={styles.item} label="姓名">
           <Input
             placeholder="姓名"
             className={styles.input}
             value={nickValue}
+            defaultValue={nickValue.toString()}
             onChange={(nickname) => {
               getNickname(nickname);
             }}
@@ -129,13 +163,13 @@ const GoodsOrders: React.FC = (props) => {
         </Form.Item>
         <Form.Item
           className={styles.item}
-          name="phone"
           label="电话"
           rules={[{ required: true, message: '电话不能为空' }]}
         >
           <Input
             placeholder="请输入电话"
             className={styles.input}
+            defaultValue={phoneValue}
             value={phoneValue}
             onChange={(phone) => {
               getPhone(phone);
@@ -161,9 +195,7 @@ const GoodsOrders: React.FC = (props) => {
             onCancel={() => {
               setValue([]);
             }}
-            onSelect={(val, extend) => {
-              console.log('onSelect', val, extend.items);
-            }}
+            onSelect={(val, extend) => {}}
           >
             {(items) => {
               if (items.every((item) => item === null)) {
@@ -174,15 +206,11 @@ const GoodsOrders: React.FC = (props) => {
             }}
           </Cascader>
         </Form.Item>
-        <Form.Item
-          className={styles.item}
-          name="address"
-          label="详细地址"
-          rules={[{ required: true, message: '地址不能为空' }]}
-        >
+        <Form.Item className={styles.item} label="详细地址">
           <Input
             placeholder="请输入地址"
             className={styles.input}
+            defaultValue={addressValue}
             value={addressValue}
             onChange={(address) => {
               getAddress(address);
@@ -328,4 +356,10 @@ const GoodsOrders: React.FC = (props) => {
     </div>
   );
 };
-export default GoodsOrders;
+const mapStateToProps = ({ users }: { users: any }) => {
+  return {
+    users,
+    addr: users.address,
+  };
+};
+export default connect(mapStateToProps)(GoodsOrders);

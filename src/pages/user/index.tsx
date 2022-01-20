@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Space, List, Toast } from 'antd-mobile';
+import { Button, Space, List, Toast, Avatar } from 'antd-mobile';
 import { httpsGet, httpsPost } from '@/services';
 import { Card } from '../../components/icon/index';
 import { history, connect, ConnectProps } from 'umi';
+import styels from './index.less';
 interface IPropsType extends ConnectProps {
   users: {
     userInfo: UserItem;
@@ -27,6 +28,21 @@ const User: React.FC<IPropsType> = ({ users }) => {
   };
   return (
     <div>
+      <div className={styels.header}>
+        <Avatar
+          src={require('../../assets/img/header.png')}
+          style={{ '--size': '64px' }}
+        />
+        <div className={styels.info}>
+          <p className={styels.p}>{users.userInfo.nickname}</p>
+          <div>
+            <Button size="mini">修改密码</Button>
+            <Button size="mini" className={styels.modify}>
+              修改手机
+            </Button>
+          </div>
+        </div>
+      </div>
       <List>
         <List.Item
           prefix={<UnorderedListOutline />}
