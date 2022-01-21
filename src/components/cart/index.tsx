@@ -1,4 +1,4 @@
-import React, { useState, FC, useEffect } from 'react';
+import React, { useState, FC, useEffect, memo } from 'react';
 import { List, Image, Stepper, Button, Input, Empty, Space } from 'antd-mobile';
 import { CloseCircleOutline, TextDeletionOutline } from 'antd-mobile-icons';
 import { getCartList, getUserInfo } from '@/pages/cart/services/idnex';
@@ -213,4 +213,4 @@ const mapStateToProps = ({ users }: { users: any }) => {
     users,
   };
 };
-export default connect(mapStateToProps)(Cartlist);
+export default connect(mapStateToProps)(memo(Cartlist));

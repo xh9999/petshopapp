@@ -117,13 +117,6 @@ const ShopPing: FC<RouteComponentProps<ParamsType> & IPropsType> = (props) => {
     ],
   });
   useEffect(() => {
-    // getUser()
-    // getRemoteList('/api/user/getUser').then((data) => {
-    //   if (data.no) {
-    //     setVisible(true);
-    //     setuserNo(data.no);
-    //   }
-    // });
     getRemoteList(`/api/test/goods?id=${id}`).then((datas) => {
       let b = '';
       if (datas.taste[0]) {
@@ -200,8 +193,14 @@ const ShopPing: FC<RouteComponentProps<ParamsType> & IPropsType> = (props) => {
                   userNo: props.users.userInfo.no,
                 };
                 request.post('/api/addcart', { data: obj }).then((data) => {
-                  let a = { display: 'block' };
-                  setyinchang(a);
+                  // let a = { display: 'block' };
+                  // setyinchang(a);
+                  if (data.code == 0) {
+                    Toast.show({
+                      icon: 'success',
+                      content: '添加购物车成功',
+                    });
+                  }
                 });
               } else {
                 Toast.show({
@@ -213,30 +212,8 @@ const ShopPing: FC<RouteComponentProps<ParamsType> & IPropsType> = (props) => {
               }
             }}
           >
-            立即购买
+            添加至购物车
           </Button>
-          <div className={styles.gouwuche} style={yinchang}>
-            <p className={styles.chenggong}>添加购物车成功</p>
-
-            <Button
-              className={styles.annui}
-              size="large"
-              onClick={() => {
-                history.push('/cart');
-              }}
-            >
-              前往购物车
-            </Button>
-            <Button
-              className={styles.annui}
-              size="large"
-              onClick={() => {
-                history.push('/');
-              }}
-            >
-              返回主页
-            </Button>
-          </div>
           <div className={styles.shuliang}>
             <Stepper
               min={1}

@@ -51,7 +51,7 @@ const IndexPage: FC<IPropsType> = (props) => {
       setUserStatus = () => {};
       setgoods = () => {};
     };
-  }, []);
+  }, [props.users.userInfo]);
   const getOrderList = async () => {
     if (props.users.userInfo.no) {
       let data = await request(`/api/orderall?id=${props.users.userInfo.no}`);
@@ -67,9 +67,9 @@ const IndexPage: FC<IPropsType> = (props) => {
     return sum.toFixed(2);
   };
   const status = () => {
-    if (userStatus) {
+    if (props.users.userInfo.no && goods) {
       return <MyAllOrder list={goods}></MyAllOrder>;
-    } else {
+    } else if (!props.users.userInfo.no) {
       return (
         <div>
           <Empty
@@ -88,6 +88,25 @@ const IndexPage: FC<IPropsType> = (props) => {
               <TextDeletionOutline />
               <span>去登录</span>
             </Space>
+          </Button>
+        </div>
+      );
+    } else if (props.users.userInfo.no && !goods) {
+      return (
+        <div>
+          <Empty
+            style={{ padding: '64px 0' }}
+            imageStyle={{ width: 128 }}
+            description="你还没有任何订单"
+          />
+          <Button
+            size="middle"
+            className={styles.goback}
+            onClick={() => {
+              history.push('/');
+            }}
+          >
+            去购物
           </Button>
         </div>
       );

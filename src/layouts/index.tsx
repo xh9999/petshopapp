@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { history } from 'umi';
-import { Button, Space, Badge, TabBar, NavBar } from 'antd-mobile';
+import { TabBar, NavBar } from 'antd-mobile';
 import { RouteComponentProps } from 'react-router-dom';
 import { httpsGet, httpsPost } from '@/services';
 import { Icons } from '../components/icon/index';
@@ -12,7 +12,6 @@ type UserInfoType = {
   photo: string;
 };
 import {
-  UnorderedListOutline,
   UserOutline,
   AppstoreOutline,
   CollectMoneyOutline,
@@ -44,17 +43,18 @@ const BasicLayout: React.FC<RouteComponentProps> = (props) => {
     },
   ];
   // 监听路由的变化
-  history.listen(({ pathname }) => {
-    if (pathname == '/') {
-      httpsGet('/api/user/getUser').then((data) => {
-        setUserInfo(data);
-      });
-    }
-  });
+  // history.listen(({ pathname }) => {
+  //   // console.log(123)
+  //   if (pathname == '/') {
+  //     httpsGet('/api/user/getUser').then((data) => {
+  //       setUserInfo(data);
+  //     });
+  //   }
+  // });
+  // setActiveKey('/cart')
   useEffect(() => {
     httpsGet('/api/user/getUser').then((data) => {
       setUserInfo(data);
-      console.log(data);
     });
     return () => {
       setUserInfo = () => {};

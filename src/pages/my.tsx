@@ -24,7 +24,6 @@ export default function MyPage() {
   const getUser = async () => {
     // 向服务器发送请求
     const data = await request('/api/user/getUser');
-    console.log(data, '服务器的数据');
     return data;
   };
   useEffect(() => {

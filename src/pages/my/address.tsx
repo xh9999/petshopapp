@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './address.less';
+import { httpsGet, httpsPost } from '@/services';
 import { options } from './city';
 import {
   Form,
@@ -10,24 +11,22 @@ import {
   Toast,
   Space,
 } from 'antd-mobile';
+type objType = {
+  address: [];
+  name: string;
+  eamil: string;
+  phone: string;
+};
+interface UserItem {
+  phone: number | string;
+  nickname: string;
+  no?: string;
+  photo: string;
+  address?: objType;
+}
 import request from 'umi-request';
 export default function AddressPage() {
-  const [user, setUser] = useState<any>({
-    nikname: '',
-    phone: 0,
-    password: '',
-    photo: '',
-    address: {},
-    no: '',
-  });
-  // 获取地址数据
-  const getUser = async () => {
-    // 向服务器发送请求
-    const data = await request('/api/user/getUser', { data: { id: 1 } });
-    console.log(data, '服务器的数据');
-    return data;
-  };
-
+  const [user, setUser] = useState<UserItem>();
   // 收货人
   const [shou, setshou] = useState<string>();
   // 省市区
@@ -36,33 +35,59 @@ export default function AddressPage() {
   const [details, setDetails] = useState<string>();
   // 手机号
   const [tel, setTel] = useState<string>();
+  const [visible, setVisible] = useState(false);
+  // 邮件
+  const [email, setEmail] = useState<string>();
+  // 获取地址数据
+  const getUser = async () => {
+    // 向服务器发送请求
+    const data = await httpsGet('/api/user/getUser');
+    setshou(data.nickname);
+    setUser(data);
+    if (data.address) {
+      setPca(data.address.address);
+      setDetails(data.address.address[3]);
+      setEmail(data.address.email);
+    }
+    setTel(data.phone);
+    // setUser(data)
+  };
+  // const [value, setValue] = useState<string[]>([]);
   // 修改地址数据
   const updeteAddress = async () => {
     // 向服务器发送请求
     const data = await request.post('/api/user/modify', {
       data: { show: shou, phone: tel },
     });
-    console.log(data, '服务器的数据');
-    return data;
   };
 
   useEffect(() => {
-    getUser().then((data) => {
-      setUser(data);
-    });
-    updeteAddress().then((data) => {
-      setUser(data);
-      // getUser();
-    });
+    getUser();
   }, []);
-
-  const onFinish = (values: any) => {
-    Dialog.alert({
-      content: JSON.stringify(values),
-    });
+  // 修改账单地址
+  const onFinish = async (values: any) => {
+    if (!shou || pca.length == 0 || !details || !tel) {
+      Dialog.alert({
+        content: JSON.stringify('请填写完整的账单地址'),
+      });
+    } else {
+      let obj = {
+        address: [...pca, details],
+        name: shou,
+        email: email,
+        phone: tel,
+      };
+      const data = await httpsPost('/api/user/address', {
+        phone: user?.phone,
+        address: obj,
+      });
+      if (data.code === 0) {
+        Dialog.alert({
+          content: JSON.stringify('保存地址成功'),
+        });
+      }
+    }
   };
-  const [visible, setVisible] = useState(false);
-  const [value, setValue] = useState<string[]>([]);
   function RenderChildrenDemo() {
     return (
       <Space align="center" className={styles.space}>
@@ -81,11 +106,9 @@ export default function AddressPage() {
           onClose={() => {
             setVisible(false);
           }}
-          value={value}
-          onConfirm={setValue}
-          onSelect={(val, extend) => {
-            console.log('onSelect', val, extend.items);
-          }}
+          value={pca}
+          onConfirm={setPca}
+          onSelect={(val, extend) => {}}
         >
           {(items) => {
             if (items.every((item) => item === null)) {
@@ -111,66 +134,50 @@ export default function AddressPage() {
         }
       >
         <h3>账单地址</h3>
-        {/* <Form.Item className={styles.item1} name='省市区' label='省市区' rules={[{ required: true, message: '省市区不能为空' }]}>
-          <Input className={styles.province} placeholder={add[0]} readOnly />
-          <Input className={styles.city} placeholder={add[1]} readOnly />
-          <Input className={styles.area} placeholder={add[2]}  readOnly/>
-          <Button
-          color='warning'
-          className={styles.select}
-          onClick={async () => {
-            const value = await Cascader.prompt({
-              options,
-              title: '选择地址',
-            })
-            Toast.show(value ? `你选择了 ${value.join('-')}`: '你没有进行选择')
-            console.log(value)
-          }}
-        >
-          选择地址
-        </Button>
-        </Form.Item> */}
-        <Form.Item
-          name="收货人"
-          label="收货人"
-          rules={[{ required: true, message: '收货人不能为空' }]}
-        >
+        <Form.Item label="收货人">
           <Input
-            defaultValue=""
+            defaultValue={shou}
             clearable
+            value={shou}
             onChange={(value) => {
               setshou(value);
-              console.log(shou);
             }}
           />
         </Form.Item>
         {/* 选择器 */}
         <RenderChildrenDemo />
         <Form.Item
-          name="详细地址"
           label="详细地址"
           rules={[{ required: true, message: '详细地址不能为空' }]}
         >
           <Input
             defaultValue=""
             clearable
+            value={details}
             onChange={(value) => {
               setDetails(value);
-              console.log(details);
             }}
           />
         </Form.Item>
         <Form.Item
-          name="手机号"
           label="手机号"
           rules={[{ required: true, message: '手机号不能为空' }]}
         >
           <Input
             defaultValue=""
+            value={tel}
             clearable
             onChange={(value) => {
               setTel(value);
-              console.log(tel);
+            }}
+          />
+        </Form.Item>
+        <Form.Item label="Email">
+          <Input
+            value={email}
+            clearable
+            onChange={(value) => {
+              setEmail(value);
             }}
           />
         </Form.Item>

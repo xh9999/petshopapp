@@ -49,15 +49,15 @@ const UserModel: UserModelType = {
     *getRemote(actions, { put, call }) {
       const data = yield call(GetUserInfo);
       // 将用户数据put给reducers这个函数
-      let address = '';
-      if (data.address) {
-        address = data.address.address;
-      }
+      // let address = '';
+      // if (data.address) {
+      //   address = data.address.address;
+      // }
+      // console.log(data, 'model')
       yield put({
         type: 'getInfo',
         payload: {
           userInfo: data,
-          address,
         },
       });
     },

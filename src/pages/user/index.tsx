@@ -27,23 +27,32 @@ const User: React.FC<IPropsType> = ({ users }) => {
     const data = await httpsGet('/api/user/exit');
     history.push('/login');
   };
+  const person = () => {
+    if (users.userInfo.no) {
+      return (
+        <>
+          <Avatar
+            src={require('../../assets/img/header.png')}
+            style={{ '--size': '64px' }}
+          />
+          <div className={styels.info}>
+            <p className={styels.p}>{users.userInfo.nickname}</p>
+            <div>
+              <Button size="mini">修改密码</Button>
+              <Button size="mini" className={styels.modify}>
+                修改手机
+              </Button>
+            </div>
+          </div>
+        </>
+      );
+    } else {
+      return <Avatar src="" style={{ '--size': '64px' }} />;
+    }
+  };
   return (
     <div>
-      <div className={styels.header}>
-        <Avatar
-          src={require('../../assets/img/header.png')}
-          style={{ '--size': '64px' }}
-        />
-        <div className={styels.info}>
-          <p className={styels.p}>{users.userInfo.nickname}</p>
-          <div>
-            <Button size="mini">修改密码</Button>
-            <Button size="mini" className={styels.modify}>
-              修改手机
-            </Button>
-          </div>
-        </div>
-      </div>
+      <div className={styels.header}>{person()}</div>
       <List>
         <List.Item
           prefix={<UnorderedListOutline />}
@@ -65,13 +74,31 @@ const User: React.FC<IPropsType> = ({ users }) => {
         </List.Item>
         <List.Item
           prefix={<UserOutline />}
-          onClick={() => history.push('/address')}
+          onClick={() => {
+            if (users.userInfo.no) {
+              history.push('/person');
+            } else {
+              Toast.show({
+                content: '你还没有登录',
+                afterClose: () => {},
+              });
+            }
+          }}
         >
           个人资料
         </List.Item>
         <List.Item
           prefix={<EnvironmentOutline />}
-          onClick={() => history.push('/address')}
+          onClick={() => {
+            if (users.userInfo.no) {
+              history.push('/address');
+            } else {
+              Toast.show({
+                content: '你还没有登录',
+                afterClose: () => {},
+              });
+            }
+          }}
         >
           账单地址
         </List.Item>

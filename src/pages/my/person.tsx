@@ -19,31 +19,20 @@ export default function PersonPage() {
   const getUser = async () => {
     // 向服务器发送请求
     const data = await request('/api/user/getUser');
-    console.log(data, '服务器的数据');
     return data;
   };
   // 手机号
   const [tel, setTel] = useState<string>();
   // 新密码
   const [newPassword, setNew] = useState<string>();
-  // 修改用户数据
-  const updeteUser = async () => {
-    // 向服务器发送请求
-    const data = await request.post('/api/user/modify', {
-      data: { password: user.paswored, newPassword: newPassword, phone: tel },
-    });
-    console.log(data, '服务器的数据');
-    return data;
-  };
-
   useEffect(() => {
     getUser().then((data) => {
       setUser(data);
     });
-    updeteUser().then((data) => {
-      setUser(data);
-      // getUser();
-    });
+    // updeteUser().then((data) => {
+    //   setUser(data);
+    //   // getUser();
+    // });
   }, []);
 
   const onFinish = (values: any) => {
@@ -59,7 +48,7 @@ export default function PersonPage() {
       <div className={styles.portrait}>
         <Avatar
           className={styles.avatar}
-          src={user.photo}
+          src={require('../../assets/img/header.png')}
           style={{ '--size': '100%' }}
         />
       </div>
@@ -99,7 +88,7 @@ export default function PersonPage() {
           rules={[{ required: true, message: '手机号不能为空' }]}
         >
           <Input
-            defaultValue={user.phone}
+            // defaultValue={user.phone}
             clearable
             onChange={(value) => {
               setTel(value);
@@ -115,7 +104,7 @@ export default function PersonPage() {
           rules={[{ required: true, message: '密码不能为空' }]}
         >
           <Input
-            defaultValue={user.password}
+            // defaultValue={user.password}
             clearable
             type="password"
             onChange={(value) => {
