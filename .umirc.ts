@@ -19,8 +19,6 @@ export default defineConfig({
         { path: '/order', component: '@/pages/order/index' },
         { path: '/myOrder', component: '@/pages/myOrder/index' },
         { path: '/', component: '@/pages/index' },
-        // 我的页面
-        { path: '/my', component: '@/pages/my' },
         // 个人资料
         { path: '/person', component: '@/pages/my/person' },
         // 我的订单
